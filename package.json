@@ -1,0 +1,30 @@
+{
+  "name": "nyhetsportalen",
+  "version": "1.0.0",
+  "description": "En modern nyhetsportal för svenska nyheter",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8080",
+    "dev": "http-server -p 3000 -o",
+    "build": "echo 'No build step required for static site'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "nyheter",
+    "news",
+    "svenska",
+    "portal",
+    "responsive",
+    "web"
+  ],
+  "author": "Mats Hamberg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mats6102hamberg/nyhetsportalen.git"
+  },
+  "homepage": "https://github.com/Mats6102hamberg/nyhetsportalen#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

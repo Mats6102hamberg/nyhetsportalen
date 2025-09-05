@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyhetsportalen - Senaste Nyheterna</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>Nyhetsportalen</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#hem" class="nav-link active">Hem</a></li>
+                    <li><a href="#politik" class="nav-link">Politik</a></li>
+                    <li><a href="#ekonomi" class="nav-link">Ekonomi</a></li>
+                    <li><a href="#sport" class="nav-link">Sport</a></li>
+                    <li><a href="#teknik" class="nav-link">Teknik</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <h2>Senaste Nyheterna</h2>
+                <p>Håll dig uppdaterad med de viktigaste händelserna</p>
+            </div>
+        </section>
+
+        <section class="news-grid" id="news-container">
+            <div class="container">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Laddar nyheter...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Nyhetsportalen. Alla rättigheter förbehållna.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
