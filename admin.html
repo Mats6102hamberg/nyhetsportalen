@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Nyhetsportalen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: #2563eb;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .admin-panel {
+            display: none;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .admin-title {
+            color: #1e293b;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .action-btn:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+        <div class="logo">
+            <h1>🔐 Admin Panel</h1>
+            <p>Nyhetsportalen</p>
+        </div>
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="username">Användarnamn</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Lösenord</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Logga in</button>
+            <div class="error-message" id="errorMessage">
+                Fel användarnamn eller lösenord!
+            </div>
+        </form>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h1 class="admin-title">Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">Logga ut</button>
+        </div>
+
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-number">16</div>
+                <div class="stat-label">Totala Artiklar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Kategorier</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Uppdateringar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Drifttid</div>
+            </div>
+        </div>
+
+        <div class="admin-actions">
+            <a href="index.html" class="action-btn">
+                <div class="action-icon">🏠</div>
+                <div class="action-title">Visa Hemsida</div>
+                <div class="action-desc">Gå till den publika nyhetsportalen</div>
+            </a>
+            <div class="action-btn" onclick="editArticles()">
+                <div class="action-icon">📝</div>
+                <div class="action-title">Redigera Artiklar</div>
+                <div class="action-desc">Lägg till, redigera eller ta bort nyheter</div>
+            </div>
+            <div class="action-btn" onclick="viewStats()">
+                <div class="action-icon">📊</div>
+                <div class="action-title">Statistik</div>
+                <div class="action-desc">Visa besöksstatistik och analytics</div>
+            </div>
+            <div class="action-btn" onclick="manageSettings()">
+                <div class="action-icon">⚙️</div>
+                <div class="action-title">Inställningar</div>
+                <div class="action-desc">Hantera sidinställningar och konfiguration</div>
+            </div>
+            <div class="action-btn" onclick="backup()">
+                <div class="action-icon">💾</div>
+                <div class="action-title">Backup</div>
+                <div class="action-desc">Säkerhetskopiera och återställ data</div>
+            </div>
+            <div class="action-btn" onclick="security()">
+                <div class="action-icon">🛡️</div>
+                <div class="action-title">Säkerhet</div>
+                <div class="action-desc">Hantera säkerhetsinställningar</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple authentication (för demo - i produktion använd riktig autentisering)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'nyheter2025'
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                // Framgångsrik inloggning
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                
+                // Spara session
+                sessionStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                // Visa felmeddelande
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // Kontrollera om användaren redan är inloggad
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function editArticles() {
+            alert('Artikelredigerare kommer snart! 📝');
+        }
+
+        function viewStats() {
+            alert('Statistik-dashboard kommer snart! 📊');
+        }
+
+        function manageSettings() {
+            alert('Inställningspanel kommer snart! ⚙️');
+        }
+
+        function backup() {
+            alert('Backup-funktionalitet kommer snart! 💾');
+        }
+
+        function security() {
+            alert('Säkerhetsinställningar kommer snart! 🛡️');
+        }
+
+        // Förhindra tillgång via direktlänk
+        window.onload = function() {
+            if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
