@@ -1,0 +1,3 @@
+# Render.com deployment configuration
+build: cd backend && pip install -r requirements.txt
+start: cd backend && python app.py

@@ -3,12 +3,17 @@
 
 class ProductionAPI {
     constructor() {
+        // KONFIGURERA DIN BACKEND-URL HÄR
+        // ================================
+        // Efter deployment, ändra denna URL till din riktiga backend:
         this.baseURL = window.location.hostname === 'localhost' 
             ? 'http://localhost:5000' 
-            : 'https://api.nyhetsportalen.se';
+            : 'https://nyhetsportalen-production.up.railway.app'; // ← ÄNDRA DENNA
         
         this.cache = new Map();
         this.cacheTimeout = 5 * 60 * 1000; // 5 minuter
+        
+        console.log(`🚀 Production API initierad - Backend: ${this.baseURL}`);
     }
 
     async request(endpoint, options = {}) {
