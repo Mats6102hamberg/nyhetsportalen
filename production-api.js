@@ -5,15 +5,15 @@ class ProductionAPI {
     constructor() {
         // KONFIGURERA DIN BACKEND-URL HÄR
         // ================================
-        // Efter deployment, ändra denna URL till din riktiga backend:
+        // Vercel API:er fungerar automatiskt på samma domän
         this.baseURL = window.location.hostname === 'localhost' 
-            ? 'http://localhost:5000' 
-            : 'https://nyhetsportalen-production.up.railway.app'; // ← ÄNDRA DENNA
+            ? 'http://localhost:3000'  // För lokal utveckling med Vercel dev
+            : '';  // Använd samma domän för Vercel API:er
         
         this.cache = new Map();
         this.cacheTimeout = 5 * 60 * 1000; // 5 minuter
         
-        console.log(`🚀 Production API initierad - Backend: ${this.baseURL}`);
+        console.log(`🚀 Production API initierad - Vercel Backend: ${this.baseURL || 'samma domän'}`);
     }
 
     async request(endpoint, options = {}) {

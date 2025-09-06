@@ -9,6 +9,7 @@ from flask_cors import CORS
 import requests
 import sqlite3
 import os
+import random  # Lägg till denna import!
 from datetime import datetime, timedelta
 import logging
 from dataclasses import dataclass
