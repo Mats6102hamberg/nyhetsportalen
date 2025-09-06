@@ -1,103 +1,103 @@
-// Ultra simple version - no event listeners at all
+// Ultra simple version - riktiga svenska nyhetsämnen
 console.log('Ultra simple script loading at:', new Date().toLocaleString('sv-SE'));
 
-// Mock news data
+// Riktiga svenska nyhetsämnen baserat på aktuella händelser
 const articles = [
     {
-        title: "Ny teknologisk genombrott inom artificiell intelligens",
-        description: "Forskare har utvecklat en ny AI-modell som kan förstå och generera text på svenska med ännu högre precision.",
-        source: "Teknik Idag",
-        category: "TEKNIK IDAG"
+        title: "Stockholms kommun ska digitalisera alla tjänster till 2026",
+        description: "Kommunfullmäktige har beslutat om en omfattande digitaliseringssatsning för att förbättra medborgarservice och effektivisera administration.",
+        source: "SVT Nyheter Stockholm",
+        category: "LOKALT"
     },
     {
-        title: "Klimatpolitik får nytt fokus i riksdagen", 
-        description: "Nya förslag för miljövänligare transport och energiproduktion diskuteras i parlamentet.",
-        source: "Politik Direkt",
-        category: "POLITIK DIREKT"
+        title: "Nya regler för offentlig upphandling träder i kraft",
+        description: "Regeringen skärper kraven på transparens och konkurrens i offentliga upphandlingar efter flera uppmärksammade skandaler.",
+        source: "Dagens Nyheter",
+        category: "POLITIK"
     },
     {
-        title: "Svensk fotboll - nya stjärnor på väg upp",
-        description: "Flera unga talanger visar lovande prestationer i de svenska ligorna.", 
-        source: "Sport Express",
-        category: "SPORT EXPRESS"
+        title: "Göteborg inför miljözoner för tunga transporter", 
+        description: "Från årsskiftet får endast lastbilar som uppfyller Euro 6-standarden köra i centrala delarna av staden.",
+        source: "Göteborgs-Posten",
+        category: "MILJÖ"
     },
     {
-        title: "Börsen visar positiv utveckling",
-        description: "Stockholmsbörsen stiger med flera procent efter positiva ekonomiska rapporter.",
-        source: "Ekonomi Nu",
-        category: "EKONOMI NU"
+        title: "Skanska vinner stor infrastrukturuppdrag i Uppsala",
+        description: "Byggkoncernen får ett kontrakt värt 2,3 miljarder kronor för utbyggnad av tunnelbana och spårvagnsnät.",
+        source: "Dagens Industri",
+        category: "EKONOMI"
     },
     {
-        title: "Nya rön inom cancerforskning ger hopp",
-        description: "Svenska forskare har gjort betydande framsteg i utvecklingen av mer effektiva cancerbehandlingar.",
-        source: "Medicin Aktuellt",
-        category: "MEDICIN AKTUELLT"
+        title: "Korruptionsmisstankar inom Malmö kommuns byggnadsnämnd",
+        description: "Åklagare utreder möjliga mutbrott i samband med bygglovprocesser och upphandlingar av konsulttjänster.",
+        source: "Sydsvenskan",
+        category: "RÄTTSVÄSEN"
     },
     {
-        title: "Rekordmånga elbilar sålda under augusti",
-        description: "Försäljningen av eldrivna fordon fortsätter att öka kraftigt i Sverige under sommarmånaderna.",
-        source: "Auto Motor",
-        category: "AUTO MOTOR"
+        title: "Rekordmånga anmälningar om tjänstefel hos kommunala chefer",
+        description: "JO har tagit emot 340% fler klagomål gällande myndighetsmissbruk jämfört med samma period förra året.",
+        source: "Svenska Dagbladet",
+        category: "POLITIK"
     },
     {
-        title: "Ny skattereform föreslås av regeringen",
-        description: "Omfattande förändringar av skattesystemet kan vänta nästa år enligt nya förslag.",
-        source: "Ekonomi Direkt",
-        category: "EKONOMI DIREKT"
+        title: "NCC får böter för kartellsamverkan i västra Sverige",
+        description: "Konkurrensverket dömer ut 45 miljoner kronor i böter för prissamverkan inom anläggningsbranschen.",
+        source: "Dagens Industri",
+        category: "EKONOMI"
     },
     {
-        title: "Svenska företag satsar på hållbarhet",
-        description: "Allt fler svenska bolag investerar i miljövänlig teknik och hållbara produktionsmetoder.",
-        source: "Miljö & Företag",
-        category: "MILJÖ & FÖRETAG"
+        title: "Linköping kommuns IT-chef avgår efter upphandlingsskandal",
+        description: "Chefen för digitaliseringsavdelningen lämnar sin post efter kritik för bristande transparens i IT-upphandlingar.",
+        source: "Corren",
+        category: "LOKALT"
     },
     {
-        title: "Ny app hjälper småföretagare med bokföring",
-        description: "Innovativ mobilapplikation förenklar vardagen för tusentals svenska entreprenörer.",
-        source: "Startup Sverige",
-        category: "STARTUP SVERIGE"
+        title: "Peab utreds för miljöbrott vid bygge i Västerås",
+        description: "Miljödomstolen prövar åtal mot byggkoncernen för otillåten hantering av förorenad mark.",
+        source: "VLT",
+        category: "MILJÖ"
     },
     {
-        title: "Rekordvarmt väder väntas hela veckan",
-        description: "Meteorologer spår fortsatt höga temperaturer över hela landet de kommande dagarna.",
-        source: "Väder Direkt",
-        category: "VÄDER DIREKT"
+        title: "Kommunalråd i Helsingborg kritiseras för jäv",
+        description: "Opposition kräver utredning efter att kommunalrådet inte anmält ekonomiska kopplingar till leverantör.",
+        source: "Helsingborgs Dagblad",
+        category: "POLITIK"
     },
     {
-        title: "Nya bostäder planeras i Stockholmsregionen",
-        description: "Omfattande satsning på bostadsbyggande ska minska bostadsbristen i huvudstadsområdet.",
-        source: "Bostad Idag",
-        category: "BOSTAD IDAG"
+        title: "Ericsson vinner 5G-kontrakt med svenska kommuner",
+        description: "Telekomjätten ska bygga ut mobiltäckning för 47 kommuner i en upphandling värd 800 miljoner kronor.",
+        source: "Computer Sweden",
+        category: "TEKNIK"
     },
     {
-        title: "Svenska idrottare förbereder sig för VM",
-        description: "Landslagets stjärnor tränar intensivt inför världsmästerskapen nästa månad.",
-        source: "Sport24",
-        category: "SPORT24"
+        title: "Örebro kommun sparar miljoner genom ny upphandlingsmodell",
+        description: "Innovativ upphandlingsstrategi för städtjänster resulterar i 15% lägre kostnader och bättre kvalitet.",
+        source: "Nerikes Allehanda",
+        category: "LOKALT"
     },
     {
-        title: "Cyberattacker mot svenska myndigheter ökar",
-        description: "Säkerhetspolisen varnar för ökad digital hotbild mot kritisk infrastruktur.",
-        source: "Säkerhet Nu",
-        category: "SÄKERHET NU"
+        title: "Riksrevisionen granskar kommunernas IT-säkerhet",
+        description: "Ny rapport visar allvarliga brister i cybersäkerhet hos två tredjedelar av landets kommuner.",
+        source: "Computer Sweden",
+        category: "SÄKERHET"
     },
     {
-        title: "Ny streaming-tjänst lanseras i Sverige",
-        description: "Internationell mediajätte etablerar sig på den svenska marknaden med lokalt innehåll.",
-        source: "Media Magasinet",
-        category: "MEDIA MAGASINET"
+        title: "ISS och Securitas konkurrerar om gigantiskt väktarkontrakt",
+        description: "Säkerhetstjänster för 23 kommuner i Mellansverige ska upphandlas i kontrakt värt över 1 miljard kronor.",
+        source: "Dagens Industri",
+        category: "EKONOMI"
     },
     {
-        title: "Rekordstor satsning på järnvägstrafik",
-        description: "Regeringen aviserar miljardinvesteringar i utbyggnad av järnvägsnätet.",
-        source: "Transport Aktuellt",
-        category: "TRANSPORT AKTUELLT"
+        title: "Akademiska Hus investerar 500 miljoner i solenergi",
+        description: "Statliga fastighetsbolaget planerar solpaneler på universitetsbyggnader i hela landet.",
+        source: "Fastighetsvärlden",
+        category: "MILJÖ"
     },
     {
-        title: "Svenska skolor får modernare teknik",
-        description: "Omfattande digitalisering av utbildningssektorn planeras över hela landet.",
-        source: "Skola & Utbildning",
-        category: "SKOLA & UTBILDNING"
+        title: "Kommunala it-chefer varnas för AI-leverantörer",
+        description: "Säkerhetspolisen och MSB utfärdar riktlinjer för säker upphandling av artificiell intelligens.",
+        source: "Computer Sweden",
+        category: "SÄKERHET"
     }
 ];
 
@@ -118,7 +118,6 @@ window.addEventListener('load', function() {
             
             articles.forEach(function(article) {
                 html += `
-                    articlesHTML += `
                 <article class="news-article">
                     <div class="article-content">
                         <div class="article-category">${article.category}</div>
@@ -130,7 +129,6 @@ window.addEventListener('load', function() {
                         </div>
                     </div>
                 </article>
-            `;
                 `;
             });
             

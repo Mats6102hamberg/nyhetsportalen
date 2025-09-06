@@ -24,8 +24,21 @@ class CompanyIntelligenceSimulator {
     }
 
     generatePeople() {
-        const firstNames = ["Anna", "Erik", "Maria", "Lars", "Emma", "Johan", "Sofia", "Peter", "Linda", "Anders"];
-        const lastNames = ["Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson", "Olsson", "Persson", "Svensson", "Gustafsson"];
+        // Riktiga svenska namn baserat på SCB:s statistik
+        const firstNames = [
+            "Anna", "Erik", "Maria", "Lars", "Emma", "Johan", "Sofia", "Peter", 
+            "Linda", "Anders", "Karin", "Magnus", "Sara", "Mikael", "Helena",
+            "Thomas", "Birgitta", "Andreas", "Margareta", "Fredrik", "Elisabeth",
+            "Mattias", "Eva", "Daniel", "Kristina", "Jonas", "Susanne", "Henrik",
+            "Annika", "Stefan", "Malin", "Robert", "Carina", "Alexander", "Lena"
+        ];
+        const lastNames = [
+            "Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson", 
+            "Olsson", "Persson", "Svensson", "Gustafsson", "Pettersson", "Jonsson",
+            "Jansson", "Hansson", "Bengtsson", "Jönsson", "Lindberg", "Jakobsson",
+            "Magnusson", "Olofsson", "Lindström", "Lindqvist", "Lindgren", "Berg",
+            "Axelsson", "Holmberg", "Lundberg", "Forsberg", "Sjöberg", "Wallin"
+        ];
         
         for (let i = 0; i < 50; i++) {
             const firstName = this.getRandomElement(firstNames);
@@ -45,7 +58,23 @@ class CompanyIntelligenceSimulator {
 
     generateCompanies() {
         const companyTypes = ["AB", "HB", "KB", "Enskild firma"];
-        const businessAreas = ["IT-konsult", "Byggentreprenad", "Ekonomikonsult", "Systemutveckling", "Fastighetsförvaltning", "Transport", "Städtjänster"];
+        const businessAreas = [
+            "IT-konsultverksamhet", "Byggentreprenad", "Ekonomisk rådgivning", 
+            "Systemutveckling", "Fastighetsförvaltning", "Transporttjänster", 
+            "Städ- och lokalvård", "Säkerhetstjänster", "Personaluthyrning",
+            "Managementkonsulter", "Teknisk konsultverksamhet", "Redovisning",
+            "Juridiska tjänster", "Marknadsföring", "Utbildningstjänster"
+        ];
+        
+        // Basera företagsnamn på riktiga svenska företagsmönster
+        const companyPrefixes = [
+            "Nordic", "Scandinavian", "Swedish", "Stockholm", "Göteborg", "Malmö",
+            "Västra", "Östra", "Norra", "Södra", "Svenska", "Svensk"
+        ];
+        const companySuffixes = [
+            "Solutions", "Services", "Consulting", "Group", "Systems", "Tech",
+            "Management", "Development", "Partners", "Associates", "Expert"
+        ];
         
         for (let i = 0; i < 30; i++) {
             const orgNr = this.generateOrgNr();

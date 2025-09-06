@@ -322,3 +322,144 @@ function displayError(message) {
         </div>
     `;
 }
+
+// PRODUKTIONS-API INTEGRATION OCH FALLBACK SYSTEM
+// ==============================================
+
+// Global API state
+let currentAPIProvider = 'fallback';
+let universalAPI = null;
+
+// Smart API selection - försöker production först, sedan fallback
+async function selectBestAPI() {
+    try {
+        // Kontrollera om production API är tillgängligt
+        if (window.productionAPI) {
+            const isOnline = await window.productionAPI.checkBackendStatus();
+            if (isOnline) {
+                console.log('🚀 Production API aktivt');
+                return 'production';
+            }
+        }
+
+        // Fallback till statisk data om backend ej tillgängligt
+        if (window.fallbackProcurementAPI) {
+            console.log('🔧 Använder fallback API - Backend ej tillgängligt');
+            return 'fallback';
+        }
+
+        // Sista utväg - simulatorer (om de finns)
+        if (window.procurementAPI) {
+            console.log('📱 Använder simulator API');
+            return 'simulators';
+        }
+
+        console.log('⚠️ Inget API tillgängligt');
+        return 'none';
+    } catch (error) {
+        console.warn('⚠️ API selection error:', error);
+        return 'fallback';
+    }
+}
+
+// Universal API wrapper som väljer bästa tillgängliga API
+class UniversalAPI {
+    constructor() {
+        this.currentProvider = 'fallback';
+        this.init();
+    }
+
+    async init() {
+        this.currentProvider = await selectBestAPI();
+        console.log(`📡 API Provider: ${this.currentProvider}`);
+        this.updateStatusIndicator();
+    }
+
+    getAPI(type) {
+        switch (this.currentProvider) {
+            case 'production':
+                return window.productionAPI;
+            case 'fallback':
+                switch (type) {
+                    case 'procurement': return window.fallbackProcurementAPI;
+                    case 'company': return window.fallbackCompanyAPI;
+                    case 'political': return window.fallbackPoliticalAPI;
+                }
+                break;
+            case 'simulators':
+                switch (type) {
+                    case 'procurement': return window.procurementAPI;
+                    case 'company': return window.companyAPI;
+                    case 'political': return window.politicalAPI;
+                }
+                break;
+            default:
+                return null;
+        }
+    }
+
+    async switchProvider(provider) {
+        this.currentProvider = provider;
+        console.log(`🔄 Växlade till ${provider} API`);
+        this.updateStatusIndicator();
+    }
+
+    updateStatusIndicator() {
+        // Skapa eller uppdatera API-status indikator
+        let indicator = document.getElementById('api-status');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'api-status';
+            indicator.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+                z-index: 1000;
+                color: white;
+            `;
+            document.body.appendChild(indicator);
+        }
+
+        // Sätt färg och text baserat på provider
+        switch (this.currentProvider) {
+            case 'production':
+                indicator.style.backgroundColor = '#28a745';
+                indicator.textContent = '🚀 LIVE DATA';
+                break;
+            case 'fallback':
+                indicator.style.backgroundColor = '#ffc107';
+                indicator.style.color = '#000';
+                indicator.textContent = '🔧 DEMO DATA';
+                break;
+            case 'simulators':
+                indicator.style.backgroundColor = '#17a2b8';
+                indicator.textContent = '📱 SIMULATOR';
+                break;
+            default:
+                indicator.style.backgroundColor = '#dc3545';
+                indicator.textContent = '❌ OFFLINE';
+        }
+    }
+}
+
+// Initiera Universal API när alla script är laddade
+function initUniversalAPI() {
+    if (!universalAPI) {
+        universalAPI = new UniversalAPI();
+        window.universalAPI = universalAPI;
+    }
+}
+
+// Lägg till i initialization
+const originalInitializeApp = window.initializeApp || initializeApp;
+window.initializeApp = function() {
+    if (originalInitializeApp) {
+        originalInitializeApp();
+    }
+    // Vänta lite för att alla scripts ska ladda
+    setTimeout(initUniversalAPI, 1000);
+};

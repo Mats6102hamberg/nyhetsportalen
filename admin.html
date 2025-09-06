@@ -560,6 +560,94 @@
             cursor: pointer;
             font-size: 1rem;
         }
+
+        /* Political Monitoring Styles */
+        .political-monitoring-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .political-monitoring-section h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .political-search-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .political-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .conflict-results, .cross-ref-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .conflict-item {
+            background: white;
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .conflict-type {
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+        }
+
+        .conflict-details {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .politician-item {
+            background: white;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .politician-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .politician-info {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .decision-item {
+            background: white;
+            border-left: 4px solid #059669;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .decision-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .decision-details {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -595,19 +683,19 @@
         <div class="admin-stats">
             <div class="stat-card">
                 <div class="stat-number" id="totalProcurements">16</div>
-                <div class="stat-label">Totala Upphandlingar</div>
+                <div class="stat-label">Upphandlingar</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="totalCompanies">0</div>
-                <div class="stat-label">Analyserade Företag</div>
+                <div class="stat-label">Företag</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="totalAnomalies">3</div>
-                <div class="stat-label">Upptäckta Anomalier</div>
+                <div class="stat-number" id="totalPoliticians">0</div>
+                <div class="stat-label">Politiker</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="highRiskCompanies">1</div>
-                <div class="stat-label">Högrisk Företag</div>
+                <div class="stat-number" id="totalConflicts">0</div>
+                <div class="stat-label">Konflikter</div>
             </div>
         </div>
 
@@ -687,6 +775,54 @@
             </div>
         </div>
 
+        <div class="political-monitoring-section">
+            <h2>🏛️ Politisk Övervakning</h2>
+            
+            <div class="political-search-section">
+                <div class="search-controls">
+                    <div class="search-group">
+                        <label>Sök Politiker:</label>
+                        <input type="text" id="politicianSearch" placeholder="Namn eller parti" />
+                        <button class="search-btn" onclick="searchPoliticians()">👤 Sök</button>
+                    </div>
+                    <div class="search-group">
+                        <label>Sök Beslut:</label>
+                        <input type="text" id="decisionSearch" placeholder="Beslut eller ärende" />
+                        <button class="search-btn" onclick="searchDecisions()">📝 Sök</button>
+                    </div>
+                </div>
+                
+                <div class="analysis-controls">
+                    <button class="analysis-btn" onclick="analyzeConflicts()">⚠️ Konfliktanalys</button>
+                    <button class="analysis-btn" onclick="analyzeAttendance()">📊 Närvaroanalys</button>
+                    <button class="analysis-btn" onclick="crossReferenceData()">🔄 Korsreferens</button>
+                </div>
+            </div>
+
+            <div class="political-results">
+                <div class="results-section">
+                    <h3>🔍 Politiska Sökresultat</h3>
+                    <div id="politicalSearchResults" class="search-results">
+                        <p>Använd sökfunktionerna ovan för att analysera politiker och beslut.</p>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h3>⚠️ Intressekonflikter</h3>
+                    <div id="conflictResults" class="conflict-results">
+                        <p>Kör konfliktanalys för att upptäcka potentiella intressekonflikter.</p>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h3>🔄 Korsreferenser</h3>
+                    <div id="crossRefResults" class="cross-ref-results">
+                        <p>Visa kopplingar mellan politik, upphandling och företag.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="admin-actions">
             <a href="index.html" class="action-btn">
                 <div class="action-icon">🏠</div>
@@ -724,8 +860,7 @@
     <!-- Modal container -->
     <div id="modalContainer"></div>
 
-    <script src="procurement-simulator.js"></script>
-    <script src="company-intelligence.js"></script>
+    <script src="production-api.js"></script>
     <script>
         // Simple authentication (för demo - i produktion använd riktig autentisering)
         const ADMIN_CREDENTIALS = {
@@ -840,6 +975,9 @@
                 
                 // Ladda riskföretag
                 loadRiskCompanies();
+                
+                // Ladda politisk övervakning
+                updatePoliticalStats();
                 
             } catch (error) {
                 showStatus('Fel vid laddning av dashboard: ' + error.message, 'error');
@@ -1178,6 +1316,179 @@
 
         function security() {
             alert('Säkerhetsinställningar kommer snart! 🛡️');
+        }
+
+        // Political Monitoring Functions
+        function searchPoliticians() {
+            const query = document.getElementById('politicianSearch').value.trim();
+            if (!query) {
+                alert('Vänligen ange ett sökord för politiker');
+                return;
+            }
+            
+            try {
+                const results = window.politicalAPI.searchPoliticians(query);
+                displayPoliticalSearchResults(results, 'politicians');
+            } catch (error) {
+                console.error('Fel vid sökning av politiker:', error);
+                alert('Fel vid sökning av politiker');
+            }
+        }
+
+        function searchDecisions() {
+            const query = document.getElementById('decisionSearch').value.trim();
+            if (!query) {
+                alert('Vänligen ange ett sökord för beslut');
+                return;
+            }
+            
+            try {
+                const results = window.politicalAPI.searchDecisions(query);
+                displayPoliticalSearchResults(results, 'decisions');
+            } catch (error) {
+                console.error('Fel vid sökning av beslut:', error);
+                alert('Fel vid sökning av beslut');
+            }
+        }
+
+        function analyzeConflicts() {
+            try {
+                const conflicts = window.politicalAPI.detectConflicts();
+                displayConflictResults(conflicts);
+            } catch (error) {
+                console.error('Fel vid konfliktanalys:', error);
+                alert('Fel vid konfliktanalys');
+            }
+        }
+
+        function analyzeAttendance() {
+            try {
+                const analysis = window.politicalAPI.analyzeAttendance();
+                displayAttendanceResults(analysis);
+            } catch (error) {
+                console.error('Fel vid närvaroanalys:', error);
+                alert('Fel vid närvaroanalys');
+            }
+        }
+
+        function crossReferenceData() {
+            try {
+                const crossRefs = window.politicalAPI.crossReference();
+                displayCrossRefResults(crossRefs);
+            } catch (error) {
+                console.error('Fel vid korsreferens:', error);
+                alert('Fel vid korsreferens');
+            }
+        }
+
+        function displayPoliticalSearchResults(results, type) {
+            const container = document.getElementById('politicalSearchResults');
+            
+            if (!results || results.length === 0) {
+                container.innerHTML = '<p>Inga resultat hittades för din sökning.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            if (type === 'politicians') {
+                html = results.map(politician => `
+                    <div class="politician-item">
+                        <div class="politician-name">${politician.name}</div>
+                        <div class="politician-info">
+                            ${politician.party} | ${politician.municipality}<br>
+                            ${politician.position} | Närvaro: ${politician.attendanceRate.toFixed(1)}%
+                        </div>
+                    </div>
+                `).join('');
+            } else if (type === 'decisions') {
+                html = results.map(decision => `
+                    <div class="decision-item">
+                        <div class="decision-title">${decision.title}</div>
+                        <div class="decision-details">
+                            ${decision.municipality} | ${decision.date}<br>
+                            Typ: ${decision.type} | Status: ${decision.outcome}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function displayConflictResults(conflicts) {
+            const container = document.getElementById('conflictResults');
+            
+            if (!conflicts || conflicts.length === 0) {
+                container.innerHTML = '<p>Inga intressekonflikter upptäckta.</p>';
+                return;
+            }
+            
+            const html = conflicts.map(conflict => `
+                <div class="conflict-item">
+                    <div class="conflict-type">${conflict.type}</div>
+                    <div class="conflict-details">
+                        <strong>${conflict.politician}</strong><br>
+                        ${conflict.description}<br>
+                        <small>Risknivå: ${conflict.severity}</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function displayAttendanceResults(analysis) {
+            const container = document.getElementById('politicalSearchResults');
+            
+            if (!analysis || analysis.length === 0) {
+                container.innerHTML = '<p>Ingen närvarodata tillgänglig.</p>';
+                return;
+            }
+            
+            const html = analysis.map(item => `
+                <div class="politician-item">
+                    <div class="politician-name">${item.politician}</div>
+                    <div class="politician-info">
+                        Närvaro: ${item.attendanceRate.toFixed(1)}% | Trend: ${item.trend}<br>
+                        <small>${item.analysis}</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function displayCrossRefResults(crossRefs) {
+            const container = document.getElementById('crossRefResults');
+            
+            if (!crossRefs || crossRefs.length === 0) {
+                container.innerHTML = '<p>Inga korsreferenser hittades.</p>';
+                return;
+            }
+            
+            const html = crossRefs.map(ref => `
+                <div class="connection-item">
+                    <div class="connection-type">${ref.type}</div>
+                    <div class="connection-details">
+                        <strong>${ref.politician}</strong> ↔ <strong>${ref.entity}</strong><br>
+                        ${ref.description}<br>
+                        <small>Upptäckt: ${ref.discoveryDate}</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function updatePoliticalStats() {
+            try {
+                const stats = window.politicalAPI.getStats();
+                document.getElementById('totalPoliticians').textContent = stats.totalPoliticians;
+                document.getElementById('totalConflicts').textContent = stats.totalConflicts;
+            } catch (error) {
+                console.error('Fel vid uppdatering av politisk statistik:', error);
+            }
         }
 
         // Förhindra tillgång via direktlänk

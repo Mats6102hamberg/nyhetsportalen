@@ -1,0 +1,19 @@
+[Unit]
+Description=Nyhetsportalen Backend API
+After=network.target
+
+[Service]
+Type=forking
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/nyhetsportalen/backend
+Environment=PATH=/var/www/nyhetsportalen/backend/venv/bin
+ExecStart=/var/www/nyhetsportalen/backend/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 4 --daemon --pid /var/run/nyhetsportalen.pid app:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PIDFile=/var/run/nyhetsportalen.pid
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
