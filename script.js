@@ -44,6 +44,7 @@ function toggleMobileMenu() {
 // Handle navigation
 function handleNavigation(e) {
     e.preventDefault();
+    e.stopPropagation();
     
     // Remove active class from all links
     navLinks.forEach(link => link.classList.remove('active'));
@@ -56,6 +57,14 @@ function handleNavigation(e) {
     
     // Get category from href
     const category = e.target.getAttribute('href').substring(1);
+    
+    // Prevent loading the same category multiple times
+    const currentActive = document.querySelector('.nav-link.active');
+    if (currentActive && currentActive.getAttribute('href').substring(1) === category) {
+        return;
+    }
+    
+    console.log(`Navigating to category: ${category}`);
     
     // Load news for category
     if (category === 'hem') {
@@ -313,17 +322,3 @@ function displayError(message) {
         </div>
     `;
 }
-
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
