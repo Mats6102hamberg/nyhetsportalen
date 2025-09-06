@@ -206,6 +206,143 @@
             font-size: 0.9rem;
             color: #64748b;
         }
+
+        .procurement-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .procurement-section h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .procurement-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .proc-btn {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .proc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.3);
+        }
+
+        .status-message {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #0c4a6e;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            color: #166534;
+        }
+
+        .status-message.error {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .data-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .data-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .data-section h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .anomalies-list, .procurements-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .anomaly-item {
+            background: white;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .anomaly-company {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .anomaly-score {
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .anomaly-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        .procurement-item {
+            background: white;
+            border-left: 4px solid #2563eb;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .procurement-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .procurement-meta {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .procurement-value {
+            background: #2563eb;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -240,20 +377,48 @@
 
         <div class="admin-stats">
             <div class="stat-card">
-                <div class="stat-number">16</div>
-                <div class="stat-label">Totala Artiklar</div>
+                <div class="stat-number" id="totalProcurements">16</div>
+                <div class="stat-label">Totala Upphandlingar</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Kategorier</div>
+                <div class="stat-number" id="totalAnomalies">3</div>
+                <div class="stat-label">Upptäckta Anomalier</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Uppdateringar</div>
+                <div class="stat-number" id="monitoredMunicipalities">5</div>
+                <div class="stat-label">Övervakade Kommuner</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Drifttid</div>
+                <div class="stat-number" id="highRiskCompanies">1</div>
+                <div class="stat-label">Högrisk Företag</div>
+            </div>
+        </div>
+
+        <div class="procurement-section">
+            <h2>🕵️ Upphandlingsövervakning</h2>
+            <div class="procurement-controls">
+                <button class="proc-btn" onclick="updateProcurementData()">🔄 Uppdatera Data</button>
+                <button class="proc-btn" onclick="runAnalysis()">📊 Kör Analys</button>
+                <button class="proc-btn" onclick="runFullCycle()">⚡ Fullständig Scan</button>
+                <button class="proc-btn" onclick="viewDashboard()">📈 Visa Dashboard</button>
+            </div>
+            
+            <div class="status-message" id="statusMessage"></div>
+            
+            <div class="data-sections">
+                <div class="data-section">
+                    <h3>🚨 Senaste Anomalier</h3>
+                    <div id="anomaliesList" class="anomalies-list">
+                        <p>Laddar anomalier...</p>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h3>📋 Senaste Upphandlingar</h3>
+                    <div id="procurementsList" class="procurements-list">
+                        <p>Laddar upphandlingar...</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -291,6 +456,7 @@
         </div>
     </div>
 
+    <script src="procurement-simulator.js"></script>
     <script>
         // Simple authentication (för demo - i produktion använd riktig autentisering)
         const ADMIN_CREDENTIALS = {
@@ -321,6 +487,148 @@
         if (sessionStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
+            loadDashboardData(); // Ladda dashboard-data vid inloggning
+        }
+
+        // Procurement Monitor Functions
+        async function updateProcurementData() {
+            showStatus('Startar datauppdatering...', 'info');
+            
+            try {
+                const result = await window.procurementAPI.updateData();
+                
+                if (result.success) {
+                    showStatus('Datauppdatering klar! Nya upphandlingar har lagts till.', 'success');
+                    loadDashboardData();
+                } else {
+                    showStatus('Fel vid datauppdatering', 'error');
+                }
+            } catch (error) {
+                showStatus('Fel vid datauppdatering: ' + error.message, 'error');
+            }
+        }
+
+        async function runAnalysis() {
+            showStatus('Startar analys av upphandlingsdata...', 'info');
+            
+            try {
+                const result = await window.procurementAPI.runAnalysis();
+                
+                if (result.success) {
+                    showStatus('Analys klar! Nya anomalier har upptäckts.', 'success');
+                    loadDashboardData();
+                } else {
+                    showStatus('Fel vid analys', 'error');
+                }
+            } catch (error) {
+                showStatus('Fel vid analys: ' + error.message, 'error');
+            }
+        }
+
+        async function runFullCycle() {
+            showStatus('Startar fullständig scan (datainsamling + analys)...', 'info');
+            
+            try {
+                const result = await window.procurementAPI.runFullCycle();
+                
+                if (result.success) {
+                    showStatus('Fullständig scan klar! Data och anomalier uppdaterade.', 'success');
+                    loadDashboardData();
+                } else {
+                    showStatus('Fel vid fullständig scan', 'error');
+                }
+            } catch (error) {
+                showStatus('Fel vid fullständig scan: ' + error.message, 'error');
+            }
+        }
+
+        function viewDashboard() {
+            loadDashboardData();
+            showStatus('Dashboard uppdaterat!', 'success');
+        }
+
+        function loadDashboardData() {
+            try {
+                const data = window.procurementAPI.getDashboardData();
+                
+                // Uppdatera statistik
+                if (data.stats) {
+                    document.getElementById('totalProcurements').textContent = data.stats.total_procurements || '0';
+                    document.getElementById('totalAnomalies').textContent = data.stats.total_anomalies || '0';
+                    document.getElementById('monitoredMunicipalities').textContent = data.stats.municipalities_monitored || '0';
+                    document.getElementById('highRiskCompanies').textContent = data.stats.high_risk_companies || '0';
+                }
+                
+                // Uppdatera anomalier
+                displayAnomalies(data.anomalies || []);
+                
+                // Uppdatera upphandlingar
+                displayProcurements(data.procurements || []);
+                
+            } catch (error) {
+                showStatus('Fel vid laddning av dashboard: ' + error.message, 'error');
+            }
+        }
+
+        function displayAnomalies(anomalies) {
+            const container = document.getElementById('anomaliesList');
+            
+            if (anomalies.length === 0) {
+                container.innerHTML = '<p>Inga anomalier hittade.</p>';
+                return;
+            }
+            
+            const html = anomalies.slice(0, 10).map(anomaly => `
+                <div class="anomaly-item">
+                    <div class="anomaly-company">
+                        ${anomaly.company_name}
+                        <span class="anomaly-score">${anomaly.score.toFixed(1)}</span>
+                    </div>
+                    <div class="anomaly-details">
+                        <strong>${anomaly.anomaly_type}</strong> - ${anomaly.municipality}<br>
+                        ${anomaly.details}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function displayProcurements(procurements) {
+            const container = document.getElementById('procurementsList');
+            
+            if (procurements.length === 0) {
+                container.innerHTML = '<p>Inga upphandlingar hittade.</p>';
+                return;
+            }
+            
+            const html = procurements.slice(0, 10).map(proc => `
+                <div class="procurement-item">
+                    <div class="procurement-title">${proc.title}</div>
+                    <div class="procurement-meta">
+                        ${proc.municipality} - ${proc.winner_company}
+                        <span class="procurement-value">${formatValue(proc.value)} kr</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function formatValue(value) {
+            return new Intl.NumberFormat('sv-SE').format(Math.round(value));
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+            
+            // Dölj meddelandet efter 5 sekunder
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
         }
 
         function logout() {
