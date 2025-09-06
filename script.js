@@ -2,15 +2,18 @@
 const NEWS_API_KEY = 'din-api-nyckel-här'; // Du behöver registrera dig på newsapi.org
 const NEWS_API_URL = 'https://newsapi.org/v2/top-headlines';
 
-// DOM elements
-const newsContainer = document.getElementById('news-container');
-const loadingElement = document.getElementById('loading');
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
+// DOM elements - will be initialized after DOM loads
+let newsContainer, loadingElement, hamburger, navMenu, navLinks;
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM elements
+    newsContainer = document.getElementById('news-container');
+    loadingElement = document.getElementById('loading');
+    hamburger = document.querySelector('.hamburger');
+    navMenu = document.querySelector('.nav-menu');
+    navLinks = document.querySelectorAll('.nav-link');
+    
     initializeApp();
     setupEventListeners();
 });
@@ -64,23 +67,46 @@ function handleNavigation(e) {
 
 // Initialize the application
 async function initializeApp() {
-    // Load general news by default
-    await loadNews('general');
+    console.log('Initializing app...');
+    
+    // Add a small delay to ensure DOM is fully ready
+    setTimeout(async () => {
+        try {
+            // Load general news by default
+            await loadNews('general');
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            hideLoading();
+            displayMockNews('general');
+        }
+    }, 100);
 }
 
 // Load news from API
 async function loadNews(category = 'general') {
+    console.log(`Loading news for category: ${category}`);
     showLoading();
+    
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+        console.log('Loading timeout - showing mock data');
+        hideLoading();
+        displayMockNews(category);
+    }, 3000); // 3 second timeout
     
     try {
         // Check if we have a valid API key
         if (!NEWS_API_KEY || NEWS_API_KEY === 'din-api-nyckel-här') {
-            // Use mock data if no API key
+            // Clear timeout and use mock data if no API key
+            clearTimeout(timeoutId);
             displayMockNews(category);
             return;
         }
         
         const response = await fetch(`${NEWS_API_URL}?country=se&category=${category}&apiKey=${NEWS_API_KEY}`);
+        
+        // Clear timeout since we got a response
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -95,6 +121,7 @@ async function loadNews(category = 'general') {
         }
         
     } catch (error) {
+        clearTimeout(timeoutId);
         console.error('Error fetching news:', error);
         displayError('Det gick inte att hämta nyheter. Visar exempelinnehåll istället.');
         displayMockNews(category);
@@ -249,15 +276,26 @@ function displayMockNews(category) {
 
 // Show loading spinner
 function showLoading() {
-    if (loadingElement) {
-        loadingElement.style.display = 'block';
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'block';
+    }
+    
+    // Hide any existing content
+    const newsContainer = document.getElementById('news-container');
+    if (newsContainer) {
+        const existingContent = newsContainer.querySelector('.news-container');
+        if (existingContent) {
+            existingContent.style.display = 'none';
+        }
     }
 }
 
 // Hide loading spinner
 function hideLoading() {
-    if (loadingElement) {
-        loadingElement.style.display = 'none';
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'none';
     }
 }
 
