@@ -1,5 +1,5 @@
-// Simple version to fix jumping issue
-console.log('Simple script loading...');
+// Simple version to fix jumping issue - Updated for fresh deployment
+console.log('Simple script loading... Updated:', new Date().toLocaleString('sv-SE'));
 
 // Mock news data
 const mockArticles = [
