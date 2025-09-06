@@ -3,6 +3,8 @@
   "public": true,
   "cleanUrls": true,
   "trailingSlash": false,
+  "buildCommand": "echo 'No build step required for static site'",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/(.*)",
