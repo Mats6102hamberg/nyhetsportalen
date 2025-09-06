@@ -116,10 +116,12 @@ function displayNews(articles) {
         .map(article => createNewsCard(article))
         .join('');
     
-    const container = document.querySelector('.container');
-    container.innerHTML = `
-        <div class="news-container">
-            ${newsHTML}
+    const newsContainer = document.getElementById('news-container');
+    newsContainer.innerHTML = `
+        <div class="container">
+            <div class="news-container">
+                ${newsHTML}
+            </div>
         </div>
     `;
 }
@@ -263,13 +265,14 @@ function hideLoading() {
 function displayError(message) {
     hideLoading();
     
-    const container = document.querySelector('.container');
-    container.innerHTML = `
-        <div class="error-message">
-            <h3>⚠️ ${message}</h3>
-            <p>För att få riktiga nyheter, registrera dig på <a href="https://newsapi.org" target="_blank">NewsAPI.org</a> och lägg till din API-nyckel i script.js</p>
+    const newsContainer = document.getElementById('news-container');
+    newsContainer.innerHTML = `
+        <div class="container">
+            <div class="error-message">
+                <h3>⚠️ ${message}</h3>
+                <p>För att få riktiga nyheter, registrera dig på <a href="https://newsapi.org" target="_blank">NewsAPI.org</a> och lägg till din API-nyckel i script.js</p>
+            </div>
         </div>
-        <div class="news-container" id="mock-news"></div>
     `;
 }
 
