@@ -343,6 +343,223 @@
             font-size: 0.8rem;
             margin-left: 0.5rem;
         }
+
+        /* Company Intelligence Styles */
+        .company-intelligence-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .company-intelligence-section h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .search-group label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .search-group input {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .search-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .search-btn, .analysis-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .search-btn:hover, .analysis-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .analysis-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .intelligence-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .results-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .results-section h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .search-results, .risk-companies, .network-connections {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .company-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .company-item:hover {
+            border-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-meta {
+            font-size: 0.9rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .risk-score {
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .risk-score.medium {
+            background: #f59e0b;
+        }
+
+        .risk-score.low {
+            background: #10b981;
+        }
+
+        .person-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .person-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-roles {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .connection-item {
+            background: white;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .connection-type {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .connection-details {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .company-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -381,12 +598,12 @@
                 <div class="stat-label">Totala Upphandlingar</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="totalAnomalies">3</div>
-                <div class="stat-label">Upptäckta Anomalier</div>
+                <div class="stat-number" id="totalCompanies">0</div>
+                <div class="stat-label">Analyserade Företag</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="monitoredMunicipalities">5</div>
-                <div class="stat-label">Övervakade Kommuner</div>
+                <div class="stat-number" id="totalAnomalies">3</div>
+                <div class="stat-label">Upptäckta Anomalier</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="highRiskCompanies">1</div>
@@ -417,6 +634,54 @@
                     <h3>📋 Senaste Upphandlingar</h3>
                     <div id="procurementsList" class="procurements-list">
                         <p>Laddar upphandlingar...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="company-intelligence-section">
+            <h2>🏢 Företagsintelligens & Ägaranalys</h2>
+            
+            <div class="search-section">
+                <div class="search-controls">
+                    <div class="search-group">
+                        <label>Sök Företag:</label>
+                        <input type="text" id="companySearch" placeholder="Företagsnamn eller org.nr" />
+                        <button class="search-btn" onclick="searchCompanies()">🔍 Sök</button>
+                    </div>
+                    <div class="search-group">
+                        <label>Sök Person:</label>
+                        <input type="text" id="personSearch" placeholder="Namn eller personnummer" />
+                        <button class="search-btn" onclick="searchPeople()">👤 Sök</button>
+                    </div>
+                </div>
+                
+                <div class="analysis-controls">
+                    <button class="analysis-btn" onclick="analyzeRisks()">⚠️ Riskanalys</button>
+                    <button class="analysis-btn" onclick="analyzeNetworks()">🌐 Nätverksanalys</button>
+                    <button class="analysis-btn" onclick="analyzeCompetitors()">🔄 Konkurrentanalys</button>
+                </div>
+            </div>
+
+            <div class="intelligence-results">
+                <div class="results-section">
+                    <h3>🔍 Sökresultat</h3>
+                    <div id="searchResults" class="search-results">
+                        <p>Använd sökfunktionerna ovan för att analysera företag och personer.</p>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h3>⚠️ Högrisk Företag</h3>
+                    <div id="riskCompanies" class="risk-companies">
+                        <p>Laddar riskanalys...</p>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h3>🌐 Misstänkta Kopplingar</h3>
+                    <div id="networkConnections" class="network-connections">
+                        <p>Kör nätverksanalys för att se kopplingar.</p>
                     </div>
                 </div>
             </div>
@@ -456,7 +721,11 @@
         </div>
     </div>
 
+    <!-- Modal container -->
+    <div id="modalContainer"></div>
+
     <script src="procurement-simulator.js"></script>
+    <script src="company-intelligence.js"></script>
     <script>
         // Simple authentication (för demo - i produktion använd riktig autentisering)
         const ADMIN_CREDENTIALS = {
@@ -550,13 +819,17 @@
         function loadDashboardData() {
             try {
                 const data = window.procurementAPI.getDashboardData();
+                const companyStats = window.companyIntelligenceAPI.getDashboardStats();
                 
                 // Uppdatera statistik
                 if (data.stats) {
                     document.getElementById('totalProcurements').textContent = data.stats.total_procurements || '0';
                     document.getElementById('totalAnomalies').textContent = data.stats.total_anomalies || '0';
-                    document.getElementById('monitoredMunicipalities').textContent = data.stats.municipalities_monitored || '0';
-                    document.getElementById('highRiskCompanies').textContent = data.stats.high_risk_companies || '0';
+                }
+                
+                if (companyStats) {
+                    document.getElementById('totalCompanies').textContent = companyStats.totalCompanies || '0';
+                    document.getElementById('highRiskCompanies').textContent = companyStats.highRiskCompanies || '0';
                 }
                 
                 // Uppdatera anomalier
@@ -565,9 +838,256 @@
                 // Uppdatera upphandlingar
                 displayProcurements(data.procurements || []);
                 
+                // Ladda riskföretag
+                loadRiskCompanies();
+                
             } catch (error) {
                 showStatus('Fel vid laddning av dashboard: ' + error.message, 'error');
             }
+        }
+
+        // Company Intelligence Functions
+        function searchCompanies() {
+            const query = document.getElementById('companySearch').value;
+            if (!query.trim()) {
+                showStatus('Ange ett sökord för företag', 'error');
+                return;
+            }
+            
+            const results = window.companyIntelligenceAPI.searchCompany(query);
+            displaySearchResults(results, 'company');
+            showStatus(`Hittade ${results.length} företag`, 'success');
+        }
+
+        function searchPeople() {
+            const query = document.getElementById('personSearch').value;
+            if (!query.trim()) {
+                showStatus('Ange ett sökord för person', 'error');
+                return;
+            }
+            
+            const results = window.companyIntelligenceAPI.searchPerson(query);
+            displaySearchResults(results, 'person');
+            showStatus(`Hittade ${results.length} personer`, 'success');
+        }
+
+        function analyzeRisks() {
+            const riskAnalysis = window.companyIntelligenceAPI.getRiskAnalysis();
+            displayRiskAnalysis(riskAnalysis);
+            showStatus('Riskanalys klar!', 'success');
+        }
+
+        function analyzeNetworks() {
+            // Visa nätverkskopplingar för de mest misstänkta företagen
+            const riskAnalysis = window.companyIntelligenceAPI.getRiskAnalysis();
+            const topCompanies = riskAnalysis.highRiskCompanies.slice(0, 3);
+            
+            let allConnections = [];
+            topCompanies.forEach(company => {
+                const connections = window.companyIntelligenceAPI.findNetworkConnections(company.orgNr);
+                allConnections = allConnections.concat(connections);
+            });
+            
+            displayNetworkConnections(allConnections);
+            showStatus(`Hittade ${allConnections.length} misstänkta kopplingar`, 'success');
+        }
+
+        function analyzeCompetitors() {
+            const municipality = 'Stockholm'; // Default
+            const analysis = window.companyIntelligenceAPI.analyzeCompetitorBidding(municipality);
+            displayCompetitorAnalysis(analysis);
+            showStatus(`Analyserade konkurrentmönster för ${municipality}`, 'success');
+        }
+
+        function displaySearchResults(results, type) {
+            const container = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<p>Inga resultat hittades.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            if (type === 'company') {
+                html = results.map(company => `
+                    <div class="company-item" onclick="showCompanyDetails('${company.orgNr}')">
+                        <div class="company-name">${company.name}</div>
+                        <div class="company-meta">
+                            <span>${company.orgNr}</span>
+                            <span class="risk-score ${getRiskLevel(company.riskScore)}">${company.riskScore.toFixed(1)}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem;">
+                            ${company.businessArea} • ${company.employees} anställda
+                        </div>
+                    </div>
+                `).join('');
+            } else if (type === 'person') {
+                html = results.map(person => `
+                    <div class="person-item">
+                        <div class="person-name">${person.name}</div>
+                        <div class="person-roles">
+                            ${person.roles.slice(0, 3).join(', ')}
+                            ${person.roles.length > 3 ? '...' : ''}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem;">
+                            ${person.companies.length} företagskopplingar
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function displayRiskAnalysis(analysis) {
+            loadRiskCompanies(); // Uppdatera riskföretag-sektionen
+            
+            // Visa detaljerad statistik i searchResults
+            const container = document.getElementById('searchResults');
+            container.innerHTML = `
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <h4>📊 Riskstatistik</h4>
+                    <div style="margin-top: 1rem;">
+                        <div>🟢 Låg risk: ${analysis.riskStatistics.low} företag</div>
+                        <div>🟡 Medium risk: ${analysis.riskStatistics.medium} företag</div>
+                        <div>🔴 Hög risk: ${analysis.riskStatistics.high} företag</div>
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 0.9rem; color: #64748b;">
+                        Totalt analyserade: ${analysis.totalAnalyzedCompanies} företag
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadRiskCompanies() {
+            const riskAnalysis = window.companyIntelligenceAPI.getRiskAnalysis();
+            const container = document.getElementById('riskCompanies');
+            
+            if (riskAnalysis.highRiskCompanies.length === 0) {
+                container.innerHTML = '<p>Inga högriskföretag identifierade.</p>';
+                return;
+            }
+            
+            const html = riskAnalysis.highRiskCompanies.slice(0, 10).map(company => `
+                <div class="company-item" onclick="showCompanyDetails('${company.orgNr}')">
+                    <div class="company-name">${company.name}</div>
+                    <div class="company-meta">
+                        <span>${company.businessArea}</span>
+                        <span class="risk-score">${company.riskScore.toFixed(1)}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function displayNetworkConnections(connections) {
+            const container = document.getElementById('networkConnections');
+            
+            if (connections.length === 0) {
+                container.innerHTML = '<p>Inga misstänkta kopplingar hittades.</p>';
+                return;
+            }
+            
+            const html = connections.slice(0, 10).map(conn => `
+                <div class="connection-item">
+                    <div class="connection-type">${conn.connectionType}</div>
+                    <div class="connection-details">
+                        ${conn.company.name}<br>
+                        <small>${conn.sharedPeople.length} gemensamma personer</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function displayCompetitorAnalysis(analysis) {
+            const container = document.getElementById('networkConnections');
+            
+            if (analysis.length === 0) {
+                container.innerHTML = '<p>Inga misstänkta konkurrensmönster hittades.</p>';
+                return;
+            }
+            
+            const html = analysis.map(item => `
+                <div class="connection-item">
+                    <div class="connection-type">Misstänkt konkurrensmönster</div>
+                    <div class="connection-details">
+                        ${item.company.name}<br>
+                        <small>Risknivå: ${item.riskLevel} • ${item.suspiciousConnections.length} kopplingar</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function showCompanyDetails(orgNr) {
+            const company = window.companyIntelligenceAPI.getCompanyDetails(orgNr);
+            if (!company) return;
+            
+            // Skapa modal med företagsdetaljer
+            const modalHtml = `
+                <div class="company-details-modal" id="companyModal">
+                    <div class="modal-content">
+                        <button class="modal-close" onclick="closeCompanyModal()">×</button>
+                        <h2>${company.name}</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                            <div>
+                                <h3>Grunduppgifter</h3>
+                                <p><strong>Org.nr:</strong> ${company.orgNr}</p>
+                                <p><strong>Verksamhetsområde:</strong> ${company.businessArea}</p>
+                                <p><strong>Anställda:</strong> ${company.employees}</p>
+                                <p><strong>Omsättning:</strong> ${window.companyIntelligence.formatCurrency(company.revenue)}</p>
+                                <p><strong>Riskpoäng:</strong> <span class="risk-score">${company.riskScore.toFixed(1)}</span></p>
+                            </div>
+                            <div>
+                                <h3>Ägare</h3>
+                                ${company.owners.map(owner => `
+                                    <p>${owner.person.name} (${owner.ownership.toFixed(1)}%)</p>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="margin-top: 2rem;">
+                            <h3>Styrelse</h3>
+                            ${company.boardMembers.map(member => `
+                                <p>${member.person.name} - ${member.role}</p>
+                            `).join('')}
+                        </div>
+                        ${company.contracts.length > 0 ? `
+                            <div style="margin-top: 2rem;">
+                                <h3>Senaste Kontrakt (${company.contracts.length})</h3>
+                                ${company.contracts.slice(0, 5).map(contract => `
+                                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        ${contract.title} - ${window.companyIntelligence.formatCurrency(contract.value)}
+                                    </p>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Ta bort befintlig modal
+            const existingModal = document.getElementById('companyModal');
+            if (existingModal) existingModal.remove();
+            
+            // Lägg till ny modal
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('companyModal').style.display = 'block';
+        }
+
+        function closeCompanyModal() {
+            const modal = document.getElementById('companyModal');
+            if (modal) modal.remove();
+        }
+
+        function getRiskLevel(score) {
+            if (score <= 3) return 'low';
+            if (score <= 6) return 'medium';
+            return 'high';
         }
 
         function displayAnomalies(anomalies) {
