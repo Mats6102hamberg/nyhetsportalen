@@ -76,19 +76,62 @@ function handleNavigation(e) {
 
 // Initialize the application
 async function initializeApp() {
-    console.log('Initializing app...');
+    console.log('🚀 Nyhetsportalen startar - Produktionsläge');
     
     // Add a small delay to ensure DOM is fully ready
     setTimeout(async () => {
         try {
-            // Load general news by default
-            await loadNews('general');
+            // Initiera Universal API och ladda produktionsdata
+            await initializeUniversalAPI();
+            await loadProcurementNews();
         } catch (error) {
             console.error('Error during initialization:', error);
             hideLoading();
             displayMockNews('general');
         }
     }, 100);
+}
+
+// Initialisera Universal API
+async function initializeUniversalAPI() {
+    if (!universalAPI) {
+        console.log('🔧 Initialiserar Universal API...');
+        universalAPI = new UniversalAPI();
+        await universalAPI.init();
+    }
+    return universalAPI;
+}
+
+// Ladda upphandlingsdata som "nyheter"
+async function loadProcurementNews() {
+    console.log('📊 Laddar svenska upphandlingar...');
+    showLoading();
+    
+    try {
+        // Använd Universal API för att hämta upphandlingar
+        if (!universalAPI) {
+            await initializeUniversalAPI();
+        }
+        
+        const procurementAPI = universalAPI.getAPI('procurement');
+        
+        if (procurementAPI && procurementAPI.getProcurements) {
+            const procurements = await procurementAPI.getProcurements({ limit: 20 });
+            displayProcurementsAsNews(procurements);
+        } else {
+            // Fallback till Vercel API
+            const response = await fetch('/api/procurements?limit=20');
+            const procurements = await response.json();
+            displayProcurementsAsNews(procurements);
+        }
+        
+        hideLoading();
+        
+    } catch (error) {
+        console.error('Error loading procurement news:', error);
+        hideLoading();
+        displayMockNews('general');
+    }
 }
 
 // Load news from API
@@ -283,21 +326,117 @@ function displayMockNews(category) {
     displayNews(filteredArticles);
 }
 
-// Show loading spinner
-function showLoading() {
-    const loading = document.getElementById('loading');
-    if (loading) {
-        loading.style.display = 'block';
+// Visa upphandlingar som nyhetskort
+function displayProcurementsAsNews(procurements) {
+    if (!newsContainer) return;
+    
+    if (!procurements || procurements.length === 0) {
+        newsContainer.innerHTML = `
+            <div class="no-news">
+                <h3>Inga upphandlingar hittades</h3>
+                <p>Systemet är under uppstart. Produktionsdata laddas...</p>
+            </div>
+        `;
+        return;
     }
     
-    // Hide any existing content
-    const newsContainer = document.getElementById('news-container');
-    if (newsContainer) {
-        const existingContent = newsContainer.querySelector('.news-container');
-        if (existingContent) {
-            existingContent.style.display = 'none';
-        }
-    }
+    const newsCards = procurements.map(procurement => {
+        // Konvertera upphandling till nyhetsformat
+        const title = procurement.title || 'Ny upphandling';
+        const authority = procurement.contracting_authority || 'Okänd myndighet';
+        const winner = procurement.winner_name || 'Okänt företag';
+        const value = procurement.value ? formatCurrency(procurement.value) : 'Okänt belopp';
+        const date = procurement.award_date || new Date().toISOString().split('T')[0];
+        
+        // Skapa beskrivning baserat på upphandlingsdata
+        const description = `${authority} har tilldelat kontrakt till ${winner} för ${value}. Upphandlingen avser ${title.toLowerCase()}.`;
+        
+        return `
+            <article class="news-card" data-procurement-id="${procurement.ted_id || procurement.id}">
+                <div class="news-image">
+                    <div class="procurement-badge">
+                        <i class="fas fa-gavel"></i>
+                        <span>Upphandling</span>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <h3 class="news-title">${title}</h3>
+                    <p class="news-description">${description}</p>
+                    <div class="news-meta">
+                        <span class="news-source">
+                            <i class="fas fa-building"></i>
+                            ${authority}
+                        </span>
+                        <span class="news-date">
+                            <i class="fas fa-calendar"></i>
+                            ${formatDate(date)}
+                        </span>
+                        <span class="news-value">
+                            <i class="fas fa-coins"></i>
+                            ${value}
+                        </span>
+                    </div>
+                    <div class="procurement-details">
+                        <span class="winner">Vinnare: ${winner}</span>
+                        ${procurement.municipality ? `<span class="municipality">${procurement.municipality}</span>` : ''}
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
+    
+    newsContainer.innerHTML = newsCards;
+    
+    // Lägg till click-handlers för att visa detaljer
+    addProcurementClickHandlers();
+}
+
+// Lägg till click-handlers för upphandlingskort
+function addProcurementClickHandlers() {
+    const newsCards = document.querySelectorAll('.news-card[data-procurement-id]');
+    
+    newsCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const procurementId = card.dataset.procurementId;
+            showProcurementDetails(procurementId);
+        });
+    });
+}
+
+// Visa detaljer för upphandling
+async function showProcurementDetails(procurementId) {
+    console.log(`Visar detaljer för upphandling: ${procurementId}`);
+    
+    // Här kan vi senare lägga till modal eller navigera till detaljsida
+    alert(`Upphandling ${procurementId} - Detaljer kommer snart!`);
+}
+
+// Formatera valuta till svenskt format
+function formatCurrency(amount) {
+    if (!amount || isNaN(amount)) return 'Okänt belopp';
+    
+    const formatter = new Intl.NumberFormat('sv-SE', {
+        style: 'currency',
+        currency: 'SEK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    });
+    
+    return formatter.format(amount);
+}
+
+// Formatera datum till svenskt format
+function formatDate(dateString) {
+    if (!dateString) return 'Okänt datum';
+    
+    const date = new Date(dateString);
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    
+    return date.toLocaleDateString('sv-SE', options);
 }
 
 // Hide loading spinner
@@ -363,88 +502,85 @@ async function selectBestAPI() {
 }
 
 // Universal API wrapper som väljer bästa tillgängliga API
-class UniversalAPI {
-    constructor() {
-        this.currentProvider = 'fallback';
-        this.init();
-    }
-
-    async init() {
-        this.currentProvider = await selectBestAPI();
-        console.log(`📡 API Provider: ${this.currentProvider}`);
-        this.updateStatusIndicator();
-    }
-
-    getAPI(type) {
-        switch (this.currentProvider) {
-            case 'production':
-                return window.productionAPI;
-            case 'fallback':
-                switch (type) {
-                    case 'procurement': return window.fallbackProcurementAPI;
-                    case 'company': return window.fallbackCompanyAPI;
-                    case 'political': return window.fallbackPoliticalAPI;
-                }
-                break;
-            case 'simulators':
-                switch (type) {
-                    case 'procurement': return window.procurementAPI;
-                    case 'company': return window.companyAPI;
-                    case 'political': return window.politicalAPI;
-                }
-                break;
-            default:
-                return null;
-        }
-    }
-
-    async switchProvider(provider) {
-        this.currentProvider = provider;
-        console.log(`🔄 Växlade till ${provider} API`);
-        this.updateStatusIndicator();
-    }
-
-    updateStatusIndicator() {
-        // Skapa eller uppdatera API-status indikator
-        let indicator = document.getElementById('api-status');
-        if (!indicator) {
-            indicator = document.createElement('div');
-            indicator.id = 'api-status';
-            indicator.style.cssText = `
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-                z-index: 1000;
-                color: white;
-            `;
-            document.body.appendChild(indicator);
-        }
-
-        // Sätt färg och text baserat på provider
-        switch (this.currentProvider) {
-            case 'production':
-                indicator.style.backgroundColor = '#28a745';
-                indicator.textContent = '🚀 LIVE DATA';
-                break;
-            case 'fallback':
-                indicator.style.backgroundColor = '#ffc107';
-                indicator.style.color = '#000';
-                indicator.textContent = '🔧 DEMO DATA';
-                break;
-            case 'simulators':
-                indicator.style.backgroundColor = '#17a2b8';
-                indicator.textContent = '📱 SIMULATOR';
-                break;
-            default:
-                indicator.style.backgroundColor = '#dc3545';
-                indicator.textContent = '❌ OFFLINE';
-        }
-    }
+function UniversalAPI() {
+    this.currentProvider = 'fallback';
+    this.init();
 }
+
+UniversalAPI.prototype.init = async function() {
+    this.currentProvider = await selectBestAPI();
+    console.log('📡 API Provider: ' + this.currentProvider);
+    this.updateStatusIndicator();
+};
+
+UniversalAPI.prototype.getAPI = function(type) {
+    switch (this.currentProvider) {
+        case 'production':
+            return window.productionAPI;
+        case 'fallback':
+            switch (type) {
+                case 'procurement': return window.fallbackProcurementAPI;
+                case 'company': return window.fallbackCompanyAPI;
+                case 'political': return window.fallbackPoliticalAPI;
+            }
+            break;
+        case 'simulators':
+            switch (type) {
+                case 'procurement': return window.procurementAPI;
+                case 'company': return window.companyAPI;
+                case 'political': return window.politicalAPI;
+            }
+            break;
+        default:
+            return null;
+    }
+};
+
+UniversalAPI.prototype.switchProvider = async function(provider) {
+    this.currentProvider = provider;
+    console.log('🔄 Växlade till ' + provider + ' API');
+    this.updateStatusIndicator();
+};
+
+UniversalAPI.prototype.updateStatusIndicator = function() {
+    // Skapa eller uppdatera API-status indikator
+    var indicator = document.getElementById('api-status');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'api-status';
+        indicator.style.cssText = 
+            'position: fixed;' +
+            'top: 10px;' +
+            'right: 10px;' +
+            'padding: 8px 12px;' +
+            'border-radius: 4px;' +
+            'font-size: 12px;' +
+            'font-weight: bold;' +
+            'z-index: 1000;' +
+            'color: white;';
+        document.body.appendChild(indicator);
+    }
+
+    // Sätt färg och text baserat på provider
+    switch (this.currentProvider) {
+        case 'production':
+            indicator.style.backgroundColor = '#28a745';
+            indicator.textContent = '🚀 LIVE DATA';
+            break;
+        case 'fallback':
+            indicator.style.backgroundColor = '#ffc107';
+            indicator.style.color = '#000';
+            indicator.textContent = '🔧 DEMO DATA';
+            break;
+        case 'simulators':
+            indicator.style.backgroundColor = '#17a2b8';
+            indicator.textContent = '📱 SIMULATOR';
+            break;
+        default:
+            indicator.style.backgroundColor = '#dc3545';
+            indicator.textContent = '❌ OFFLINE';
+    }
+};
 
 // Initiera Universal API när alla script är laddade
 function initUniversalAPI() {
@@ -462,4 +598,123 @@ window.initializeApp = function() {
     }
     // Vänta lite för att alla scripts ska ladda
     setTimeout(initUniversalAPI, 1000);
+};
+
+// Fallback API:er för när backend inte är tillgängligt
+window.fallbackProcurementAPI = {
+    async getProcurements(options = {}) {
+        const limit = options.limit || 50;
+        const municipality = options.municipality;
+        
+        console.log('🔧 Använder fallback procurement API');
+        
+        try {
+            // Försök Vercel API först
+            let url = `/api/procurements?limit=${limit}`;
+            if (municipality) {
+                url += `&municipality=${municipality}`;
+            }
+            
+            const response = await fetch(url);
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.warn('Vercel API failed, using static data:', error);
+        }
+        
+        // Static fallback data
+        return this.generateStaticData(limit, municipality);
+    },
+    
+    generateStaticData(limit, municipality) {
+        const authorities = [
+            "Stockholms stad", "Göteborgs kommun", "Malmö kommun",
+            "Uppsala kommun", "Linköpings kommun", "Västerås stad"
+        ];
+        
+        const companies = [
+            { name: "Skanska Sverige AB", org_nr: "556016-0680" },
+            { name: "CGI Sverige AB", org_nr: "556034-5000" },
+            { name: "Securitas Sverige AB", org_nr: "556138-3073" }
+        ];
+        
+        const contractTypes = [
+            { title: "IT-drift och support", base_value: 15000000 },
+            { title: "Byggentreprenad", base_value: 50000000 },
+            { title: "Säkerhetstjänster", base_value: 8000000 }
+        ];
+        
+        const procurements = [];
+        
+        for (let i = 0; i < Math.min(limit, 20); i++) {
+            const contractType = contractTypes[i % contractTypes.length];
+            const authority = authorities[i % authorities.length];
+            const company = companies[i % companies.length];
+            
+            if (municipality && !authority.includes(municipality)) {
+                continue;
+            }
+            
+            const value = contractType.base_value * (0.8 + Math.random() * 0.4);
+            const daysAgo = Math.floor(Math.random() * 30);
+            const date = new Date();
+            date.setDate(date.getDate() - daysAgo);
+            
+            procurements.push({
+                id: `fallback-${i + 1}`,
+                ted_id: `2025-SE-${String(i + 1).padStart(6, '0')}`,
+                title: `${contractType.title} för ${authority}`,
+                contracting_authority: authority,
+                winner_name: company.name,
+                winner_org_nr: company.org_nr,
+                value: Math.round(value),
+                currency: 'SEK',
+                award_date: date.toISOString().split('T')[0],
+                municipality: authority.replace(' kommun', '').replace(' stad', ''),
+                source: 'FALLBACK'
+            });
+        }
+        
+        return procurements;
+    }
+};
+
+window.fallbackCompanyAPI = {
+    async getCompany(orgNr) {
+        console.log('🔧 Använder fallback company API');
+        
+        const knownCompanies = {
+            "556016-0680": {
+                name: "Skanska Sverige AB",
+                business_area: "Byggentreprenad",
+                employees: 12500,
+                revenue: 58000000000
+            },
+            "556034-5000": {
+                name: "CGI Sverige AB",
+                business_area: "IT-konsultverksamhet",
+                employees: 3200,
+                revenue: 4500000000
+            }
+        };
+        
+        return knownCompanies[orgNr] || {
+            name: `Företag ${orgNr}`,
+            business_area: 'Okänd verksamhet',
+            employees: Math.floor(Math.random() * 1000),
+            revenue: Math.floor(Math.random() * 100000000)
+        };
+    }
+};
+
+window.fallbackPoliticalAPI = {
+    async getPoliticalData() {
+        console.log('🔧 Använder fallback political API');
+        return {
+            connections: [],
+            influence_network: [],
+            risk_assessments: []
+        };
+    }
 };

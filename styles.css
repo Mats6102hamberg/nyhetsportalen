@@ -191,6 +191,30 @@ body {
     object-fit: cover;
 }
 
+.news-image {
+    height: 200px;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    position: relative;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.news-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(37, 99, 235, 0.03),
+        rgba(37, 99, 235, 0.03) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    border-radius: 12px 12px 0 0;
+}
+
 .news-content {
     padding: 1.5rem;
 }
@@ -233,12 +257,71 @@ body {
     color: #94a3b8;
 }
 
-.news-source {
-    font-weight: 500;
+.news-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: #6b7280;
 }
 
-.news-date {
-    font-style: italic;
+.news-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.news-meta i {
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+.news-value {
+    color: #059669 !important;
+    font-weight: 600;
+}
+
+.procurement-badge {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 2;
+}
+
+.procurement-badge i {
+    font-size: 0.9rem;
+}
+
+.procurement-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.85rem;
+}
+
+.procurement-details .winner {
+    color: #059669;
+    font-weight: 600;
+}
+
+.procurement-details .municipality {
+    color: #7c3aed;
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 4px;
 }
 
 /* Loading Spinner */
@@ -320,6 +403,21 @@ body {
     .news-container {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+    
+    .news-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .procurement-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .procurement-badge {
+        font-size: 0.7rem;
+        padding: 6px 10px;
     }
 }
 
