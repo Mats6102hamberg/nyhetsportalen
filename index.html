@@ -6,7 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Nyhetsportalen - Senaste Nyheterna (Updated)</title>
+    <meta name="cache-bust" content="2025-09-07-v2">
+    <title>Nyhetsportalen - Svenska Upphandlingar (LIVE)</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -61,7 +62,15 @@
         </div>
     </footer>
 
-    <!-- Nyheter JavaScript - ES5 Compatible -->
-    <script src="nyheter-script.js?v=2025.09.07"></script>
+    <!-- LIVE Svenska Upphandlingar - ES5 Compatible JavaScript -->
+    <script>console.log('🚀 Loading nyheter-script.js v2025.09.07');</script>
+    <script src="nyheter-script.js?v=2025.09.07&bust=" + Date.now()></script>
+    <script>
+    // Force refresh if old script is still cached
+    if (typeof loadProcurementNews === 'undefined') {
+        console.log('⚡ Force reloading script...');
+        window.location.reload(true);
+    }
+    </script>
 </body>
 </html>
