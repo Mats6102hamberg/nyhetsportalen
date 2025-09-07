@@ -58,17 +58,19 @@ function loadProcurementNews() {
     // Prova Vercel API först
     fetch('/api/procurements?limit=20')
         .then(function(response) {
+            console.log('API Response status:', response.status);
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('API error');
+            throw new Error('API error: ' + response.status);
         })
         .then(function(procurements) {
+            console.log('✅ API success, antal upphandlingar:', procurements.length);
             displayProcurementsAsNews(procurements);
             hideLoading();
         })
         .catch(function(error) {
-            console.warn('API failed, using fallback:', error);
+            console.warn('⚠️ API failed, using fallback:', error);
             displayFallbackNews();
             hideLoading();
         });
